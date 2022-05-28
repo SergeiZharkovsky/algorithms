@@ -26,7 +26,7 @@ def calculations(k, symbols):
 
 def main():
     k = int(input()) * 2
-    symbols = ''.join(input() for i in range(4)).replace('.', '')
+    symbols = ''.join(input() for _ in range(4)).replace('.', '')
     print(calculations(k, symbols))
 
 
