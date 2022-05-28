@@ -14,27 +14,21 @@
 """
 
 
-def data_input():
+def calculations(k, symbols):
+    numbers = []
+    for elem in symbols:
+        if elem == '.':
+            continue
+        numbers.append(int(elem))
+    score = sum(0 < numbers.count(num) <= k for num in range(1, 10))
+    return score
+
+
+def main():
     k = int(input()) * 2
     symbols = ''.join(input() for i in range(4)).replace('.', '')
-    return k, symbols
-
-
-def calculations():
-    k, symbols = data_input()
-    numbers = []
-    scores = 0
-    for i in range(1, 10):
-        count = symbols.count(str(i))
-        numbers.append(count)
-
-    for i, elem in enumerate(numbers):
-        if elem == 0:
-            continue
-        if int(elem) <= k:
-            scores += 1
-    print(scores)
+    print(calculations(k, symbols))
 
 
 if __name__ == '__main__':
-    calculations()
+    main()

@@ -17,15 +17,9 @@
 """
 
 
-def street_parameters():
-    length_street = int(input())
-    street = [int(num) for num in input().split(' ')]
-    return length_street, street
-
-
-def get_distances():
-    length_street, street = street_parameters()
+def get_distances(street, length_street):
     distance = []
+
     zero_index = None
     for i, house_num in enumerate(street):
         if house_num == 0:
@@ -36,6 +30,7 @@ def get_distances():
             distance.append(i - zero_index)
         else:
             distance.append(length_street)
+
     zero_index = None
     for i, house_num in reversed(list(enumerate(street))):
         if house_num == 0:
@@ -46,8 +41,15 @@ def get_distances():
             and distance[i] > zero_index - i
         ):
             distance[i] = (zero_index - i)
-    print(*distance)
+
+    return distance
+
+
+def main():
+    length_street = int(input())
+    street = [int(num) for num in input().strip().split()]
+    print(*get_distances(street, length_street))
 
 
 if __name__ == '__main__':
-    get_distances()
+    main()
