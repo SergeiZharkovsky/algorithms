@@ -10,49 +10,59 @@
 """
 
 
+class NoItemsException(Exception):
+    def __init__(self):
+        pass
+
+
+class MaxItemsException(Exception):
+    def __init__(self):
+        pass
+
+
 class Deque:
     def __init__(self, max_size):
-        self.elem = [None] * max_size
-        self.max_n = max_size
-        self.head = 0
-        self.tail = 0
-        self.size = 0
+        self._array = [None] * max_size
+        self._max_size = max_size
+        self._head = 0
+        self._tail = 0
+        self._size = 0
 
     def is_empty(self):
-        return self.size == 0
+        return self._size == 0
+
+    def _push(self, idx, value):
+        if self._size >= self._max_size:
+            raise MaxItemsException
+
+        self._array[idx] = value
+        self._size += 1
 
     def push_back(self, value):
-        if self.size != self.max_n:
-            self.elem[self.tail] = value
-            self.tail = (self.tail + 1) % self.max_n
-            self.size += 1
-        else:
-            raise OverflowError
+        self._push(self._tail, value)
+        self._tail = (self._tail + 1) % self._max_size
 
     def push_front(self, value):
-        if self.size != self.max_n:
-            self.elem[self.head - 1] = value
-            self.head = (self.head - 1) % self.max_n
-            self.size += 1
-        else:
-            raise OverflowError
+        new_head = (self._head - 1) % self._max_size
+        self._push(new_head, value)
+        self._head = new_head
 
     def pop_front(self):
         if self.is_empty():
-            raise IndexError
-        x = self.elem[self.head]
-        self.elem[self.head] = None
-        self.head = (self.head + 1) % self.max_n
-        self.size -= 1
+            raise NoItemsException
+        x = self._array[self._head]
+        self._array[self._head] = None
+        self._head = (self._head + 1) % self._max_size
+        self._size -= 1
         return x
 
     def pop_back(self):
         if self.is_empty():
-            raise IndexError
-        x = self.elem[self.tail - 1]
-        self.elem[self.tail - 1] = None
-        self.tail = (self.tail - 1) % self.max_n
-        self.size -= 1
+            raise NoItemsException
+        x = self._array[self._tail - 1]
+        self._array[self._tail - 1] = None
+        self._tail = (self._tail - 1) % self._max_size
+        self._size -= 1
         return x
 
 
@@ -65,7 +75,7 @@ def main():
         result = getattr(deque, command)
         try:
             output = result(*value)
-        except (OverflowError, IndexError):
+        except (MaxItemsException, NoItemsException):
             output = 'error'
         if output is not None:
             print(output)

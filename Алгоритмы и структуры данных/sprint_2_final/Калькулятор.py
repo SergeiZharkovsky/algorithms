@@ -16,23 +16,22 @@ OPERATORS = {
 
 class Stack:
     def __init__(self):
-        self.items = []
+        self._array = []
 
-    def push(self, item):
-        self.items.append(item)
+    def push(self, element):
+        self._array.append(element)
 
     def pop(self):
-        if len(self.items) > 0:
-            return self.items.pop()
-        raise IndexError
+        if len(self._array) > 0:
+            return self._array.pop()
+        raise IndexError('Стек пуст')
 
 
 def calculator(expression):
     stack = Stack()
     for i in expression:
         if i in OPERATORS:
-            number_1 = stack.pop()
-            number_2 = stack.pop()
+            number_1, number_2 = stack.pop(), stack.pop()
             stack.push(OPERATORS[i](number_2, number_1))
         else:
             stack.push(int(i))
