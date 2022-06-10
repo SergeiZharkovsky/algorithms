@@ -31,6 +31,16 @@ class Deque:
     def is_empty(self):
         return self._size == 0
 
+    def _get_index_by_method(self, name):
+        results = {
+            'push_front': self._head - 1,
+            'push_back': self._tail + 1,
+            'pop_front': self._head + 1,
+            'pop_back': self._tail - 1
+        }
+        index = results.get(name) % self._max_size
+        return index
+
     def _push(self, idx, value):
         if self._size >= self._max_size:
             raise MaxItemsException
@@ -40,29 +50,31 @@ class Deque:
 
     def push_back(self, value):
         self._push(self._tail, value)
-        self._tail = (self._tail + 1) % self._max_size
+        self._tail = self._get_index_by_method(self.push_back.__name__)
 
     def push_front(self, value):
-        new_head = (self._head - 1) % self._max_size
+        new_head = self._get_index_by_method(self.push_front.__name__)
         self._push(new_head, value)
         self._head = new_head
 
-    def pop_front(self):
+    def _pop(self, idx):
         if self.is_empty():
             raise NoItemsException
-        x = self._array[self._head]
-        self._array[self._head] = None
-        self._head = (self._head + 1) % self._max_size
+
         self._size -= 1
+        x = self._array[idx]
+        self._array[idx] = None
+        return x
+
+    def pop_front(self):
+        x = self._pop(self._head)
+        self._head = self._get_index_by_method(self.pop_front.__name__)
         return x
 
     def pop_back(self):
-        if self.is_empty():
-            raise NoItemsException
-        x = self._array[self._tail - 1]
-        self._array[self._tail - 1] = None
-        self._tail = (self._tail - 1) % self._max_size
-        self._size -= 1
+        new_tail = self._get_index_by_method(self.pop_back.__name__)
+        x = self._pop(new_tail)
+        self._tail = new_tail
         return x
 
 
