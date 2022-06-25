@@ -45,12 +45,18 @@
 """
 
 
+from collections import namedtuple
+
+
 def input_data():
     n = int(input())
-    arr = []
-    for _ in range(n):
+    student_mask = namedtuple('student', ['tasks', 'penalty', 'login'])
+    arr = [None] * n
+    for idx in range(n):
         login, tasks, penalty = input().split()
-        arr.append((-(int(tasks)), int(penalty), login))
+        arr[idx] = student_mask(
+            login=login, tasks=-int(tasks), penalty=int(penalty)
+            )
     return arr
 
 
@@ -85,8 +91,8 @@ def quick_sort(arr, left=0, right=None):
 def main():
     arr = input_data()
     quick_sort(arr)
-    for i in range(len(arr)):
-        print(arr[i][-1])
+    for student in arr:
+        print(student.login)
 
 
 if __name__ == '__main__':
